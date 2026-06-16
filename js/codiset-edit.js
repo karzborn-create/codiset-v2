@@ -57,9 +57,10 @@
 
     async function loadProducts() {
         try {
-            const res = await fetch('http://localhost:19877/products');
+            const res = await fetch('http://localhost:19877/products?limit=10000');
             if (res.ok) {
-                products = await res.json();
+                const data = await res.json();
+                products = Array.isArray(data) ? data : (data.rows || []);
             }
         } catch (e) {
             // 서버 준비 안 됨
