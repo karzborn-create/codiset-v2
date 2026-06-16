@@ -26,8 +26,8 @@
 .sidebar-logo-icon {
     width: 26px;
     height: 26px;
-    color: var(--accent);
     flex-shrink: 0;
+    object-fit: contain;
 }
 
 .sidebar-title {
