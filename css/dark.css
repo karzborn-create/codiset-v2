@@ -1,0 +1,30 @@
+/* ============================================
+   dark.css - 다크 모드 오버라이드
+   [data-theme="dark"]가 html에 적용될 때 활성화
+   ============================================ */
+
+[data-theme="dark"] {
+    --bg-primary: #1c1c1e;
+    --bg-secondary: #2c2c2e;
+    --bg-tertiary: #3a3a3c;
+    --bg-elevated: #48484a;
+
+    --text-primary: #ffffff;
+    --text-secondary: #ebebf5;
+    --text-tertiary: #8e8e93;
+    --text-quaternary: #636366;
+
+    --accent: #8e8e93;
+    --accent-dim: rgba(142, 142, 147, 0.15);
+
+    --border: #38383a;
+    --border-light: #48484a;
+
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 상품 가격 (product-list.css) */
+[data-theme="dark"] .product-card-price,
+[data-theme="dark"] .product-row-price {
+    color: #ffffff;
+}

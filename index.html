@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' http://localhost:19877; img-src 'self' https: http: data:;">
+    <title>Codiset - 에이블리 신상 셀렉</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dark.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/product-list.css">
+    <link rel="stylesheet" href="css/codiset.css">
+    <link rel="stylesheet" href="css/codiset-edit.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/store-list.css">
+</head>
+
+<body>
+    <!-- 사이드바가 동적으로 로드됩니다 -->
+    <div id="sidebar-container"></div>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main id="main-content">
+        <div class="main-placeholder">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+            </svg>
+            <p class="placeholder-text">메뉴를 선택해주세요</p>
+        </div>
+    </main>
+
+    <script src="js/sidebar.js"></script>
+    <script src="js/product-list.js"></script>
+    <script src="js/codiset.js"></script>
+    <script src="js/codiset-edit.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/store-list.js"></script>
+    <script>
+        // sidebar.html fetch & inject
+        (async function () {
+            try {
+                const res = await fetch('html/sidebar.html');
+                const html = await res.text();
+                document.getElementById('sidebar-container').innerHTML = html;
+
+                // 사이드바 초기화
+                if (window.Sidebar && typeof window.Sidebar.init === 'function') {
+                    window.Sidebar.init();
+
+                    // 메뉴 변경 감지
+                    window.Sidebar.onMenuChange(async function (menu) {
+                        const main = document.getElementById('main-content');
+                        const placeholder = document.querySelector('.main-placeholder');
+                        if (placeholder) placeholder.style.display = 'none';
+
+                        // 상품목록 메뉴 처리
+                        if (menu === 'products') {
+                            await loadProductList(main);
+                        }
+
+                        // 코디세트 메뉴 처리
+                        if (menu === 'codiset') {
+                            await loadCodiset(main);
+                        }
+
+                        // 샘플 가능 매장 리스트 메뉴 처리
+                        if (menu === 'store-list') {
+                            await loadStoreList(main);
+                        }
+
+                        console.log('[Codiset] 메뉴 변경:', menu);
+                    });
+
+                    // 초기 메뉴가 products이면 즉시 로드
+                    if (window.Sidebar.getActiveMenu() === 'products') {
+                        const main = document.getElementById('main-content');
+                        await loadProductList(main);
+                    }
+
+                    // 초기 메뉴가 codiset이면 즉시 로드
+                    if (window.Sidebar.getActiveMenu() === 'codiset') {
+                        const main = document.getElementById('main-content');
+                        await loadCodiset(main);
+                    }
+
+                    // 초기 메뉴가 store-list이면 즉시 로드
+                    if (window.Sidebar.getActiveMenu() === 'store-list') {
+                        const main = document.getElementById('main-content');
+                        await loadStoreList(main);
+                    }
+                }
+
+                async function loadProductList(main) {
+                    try {
+                        const res = await fetch('html/product-list.html');
+                        const html = await res.text();
+                        main.innerHTML = html;
+                        const placeholder = document.querySelector('.main-placeholder');
+                        if (placeholder) placeholder.style.display = 'none';
+                        if (window.ProductList && typeof window.ProductList.init === 'function') {
+                            window.ProductList.init();
+                        }
+                    } catch (err) {
+                        console.error('[Codiset] 상품목록 로드 실패:', err);
+                    }
+                }
+
+                async function loadCodiset(main) {
+                    try {
+                        const res = await fetch('html/codiset.html');
+                        const html = await res.text();
+                        main.innerHTML = html;
+                        const placeholder = document.querySelector('.main-placeholder');
+                        if (placeholder) placeholder.style.display = 'none';
+                        if (window.Codiset && typeof window.Codiset.init === 'function') {
+                            window.Codiset.init();
+                        }
+                    } catch (err) {
+                        console.error('[Codiset] 코디세트 로드 실패:', err);
+                    }
+                }
+
+                async function loadStoreList(main) {
+                    try {
+                        const res = await fetch('html/store-list.html');
+                        const html = await res.text();
+                        main.innerHTML = html;
+                        const placeholder = document.querySelector('.main-placeholder');
+                        if (placeholder) placeholder.style.display = 'none';
+                        if (window.StoreList && typeof window.StoreList.init === 'function') {
+                            window.StoreList.init();
+                        }
+                    } catch (err) {
+                        console.error('[Codiset] 매장리스트 로드 실패:', err);
+                    }
+                }
+
+                async function loadCodisetEdit(main, codiset) {
+                    try {
+                        const res = await fetch('html/codiset-edit.html');
+                        const html = await res.text();
+                        main.innerHTML = html;
+                        const placeholder = document.querySelector('.main-placeholder');
+                        if (placeholder) placeholder.style.display = 'none';
+                        if (window.CodisetEdit && typeof window.CodisetEdit.init === 'function') {
+                            window.CodisetEdit.init(codiset);
+                        }
+                    } catch (err) {
+                        console.error('[Codiset] 코디세트 편집 로드 실패:', err);
+                    }
+                }
+
+                // codiset.js → 편집 페이지 이동 글로벌 함수
+                window.CodisetEdit_navigate = function (codiset) {
+                    const main = document.getElementById('main-content');
+                    loadCodisetEdit(main, codiset);
+                };
+
+                // codiset-edit.js → 뒤로가기 글로벌 함수
+                window.CodisetEdit.goBack = function () {
+                    const main = document.getElementById('main-content');
+                    loadCodiset(main);
+                };
+            } catch (err) {
+                console.error('[Codiset] 사이드바 로드 실패:', err);
+            }
+        })();
+    </script>
+
+    <!-- modal.html inject -->
+    <script>
+        (async function () {
+            try {
+                const res = await fetch('html/modal.html');
+                const html = await res.text();
+                const container = document.createElement('div');
+                container.innerHTML = html;
+                document.body.appendChild(container.firstElementChild);
+
+                if (window.Modal && typeof window.Modal.init === 'function') {
+                    window.Modal.init();
+                }
+            } catch (err) {
+                console.error('[Codiset] 모달 로드 실패:', err);
+            }
+        })();
+    </script>
+</body>
+
+</html>

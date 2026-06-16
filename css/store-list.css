@@ -1,0 +1,467 @@
+/* store-list.css - 샘플 가능 매장 리스트 스타일 (iOS 라이트/다크 대응) */
+
+.store-list-container {
+    padding: 24px 28px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 헤더 */
+.store-list-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.store-list-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+}
+
+.store-count {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.btn-store-add {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-store-add:hover {
+    opacity: 0.85;
+}
+
+.btn-store-add svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* 테이블 */
+.store-table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.store-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.store-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.store-table th {
+    background: var(--bg-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.store-table td {
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-primary);
+}
+
+.store-table tbody tr td {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.store-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.store-table tbody tr:hover td {
+    background: var(--bg-secondary);
+}
+
+.col-name {
+    width: 22%;
+}
+
+.col-address {
+    width: 28%;
+}
+
+.col-category {
+    width: 14%;
+}
+
+.col-kindness {
+    width: 10%;
+}
+
+.col-memo {
+    width: 26%;
+}
+
+.col-memo-cell {
+    font-size: 13px;
+    color: var(--text-secondary);
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 행 액션 오버레이 */
+.store-row {
+    position: relative;
+}
+
+.store-row-actions {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 1;
+}
+
+.store-row:hover .store-row-actions {
+    opacity: 1;
+}
+
+/* 친절도 별 */
+.store-stars {
+    display: flex;
+    gap: 1px;
+}
+
+.store-stars svg {
+    width: 14px;
+    height: 14px;
+}
+
+.store-star-filled {
+    color: #f5a623;
+    fill: #f5a623;
+}
+
+.store-star-empty {
+    color: var(--text-quaternary);
+}
+
+[data-theme="dark"] .store-star-filled {
+    color: #f7b84e;
+    fill: #f7b84e;
+}
+
+/* 수정/삭제 버튼 공통 */
+.btn-store-edit,
+.btn-store-delete {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-store-edit svg,
+.btn-store-delete svg {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-store-edit:hover {
+    color: var(--accent);
+    background: var(--accent-dim);
+}
+
+.btn-store-delete:hover {
+    color: #ff3b30;
+    background: rgba(255, 59, 48, 0.1);
+}
+
+/* 빈 상태 */
+.store-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 20px;
+    color: var(--text-tertiary);
+    gap: 8px;
+}
+
+.store-empty svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+}
+
+.store-empty p {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.store-empty small {
+    font-size: 12px;
+}
+
+/* ===== 모달 ===== */
+.store-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: storeModalFadeIn 0.2s ease-out;
+}
+
+.store-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.store-modal-container {
+    position: relative;
+    z-index: 1;
+    padding: 24px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.store-modal-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px 20px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    animation: storeModalSlideUp 0.25s ease-out;
+}
+
+.store-modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 24px;
+    text-align: center;
+    letter-spacing: -0.2px;
+}
+
+/* 폼 그룹 */
+.store-form-group {
+    margin-bottom: 16px;
+}
+
+.store-form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.store-form-textarea:focus {
+    border-color: var(--accent);
+}
+
+.store-form-textarea::placeholder {
+    color: var(--text-quaternary);
+}
+
+.store-form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+.store-form-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.store-form-input:focus {
+    border-color: var(--accent);
+}
+
+.store-form-input::placeholder {
+    color: var(--text-quaternary);
+}
+
+/* 별점 */
+.star-rating {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.star-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    transition: transform 0.1s;
+}
+
+.star-btn:hover {
+    transform: scale(1.15);
+}
+
+.star-btn svg {
+    width: 32px;
+    height: 32px;
+    color: var(--text-quaternary);
+    stroke-width: 1.5;
+    transition: color 0.15s, fill 0.15s;
+}
+
+.star-btn.active svg,
+.star-btn:hover svg {
+    color: #f5a623;
+    fill: #f5a623;
+}
+
+/* hover시 왼쪽 별도 채워짐 */
+.star-rating:hover .star-btn svg {
+    color: #f5a623;
+    fill: #f5a623;
+}
+
+.star-rating .star-btn:hover~.star-btn svg {
+    color: var(--text-quaternary);
+    fill: none;
+}
+
+[data-theme="dark"] .star-btn.active svg,
+[data-theme="dark"] .star-btn:hover svg {
+    color: #f7b84e;
+    fill: #f7b84e;
+}
+
+[data-theme="dark"] .star-rating:hover .star-btn svg {
+    color: #f7b84e;
+    fill: #f7b84e;
+}
+
+[data-theme="dark"] .star-rating .star-btn:hover~.star-btn svg {
+    color: var(--text-quaternary);
+    fill: none;
+}
+
+/* 액션 버튼 */
+.store-modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.store-modal-btn {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-modal-btn-cancel {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.store-modal-btn-cancel:hover {
+    background: var(--bg-tertiary);
+}
+
+.store-modal-btn-save {
+    background: var(--accent);
+    color: #fff;
+}
+
+.store-modal-btn-save:hover {
+    opacity: 0.85;
+}
+
+/* 애니메이션 */
+@keyframes storeModalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes storeModalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

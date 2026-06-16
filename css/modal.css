@@ -1,0 +1,166 @@
+/* modal.css - 삭제 확인 모달 스타일 (Apple iOS 스타일, 라이트/다크 대응) */
+
+/* 오버레이 */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-container {
+    position: relative;
+    z-index: 1;
+    padding: 24px;
+    width: 100%;
+    max-width: 320px;
+}
+
+/* 카드 */
+.modal-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px 20px;
+    text-align: center;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    animation: modalSlideUp 0.25s ease-out;
+}
+
+/* 아이콘 */
+.modal-icon-wrap {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    background: rgba(255, 59, 48, 0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme="dark"] .modal-icon-wrap {
+    background: rgba(255, 69, 58, 0.2);
+}
+
+.modal-icon {
+    width: 28px;
+    height: 28px;
+    color: #ff3b30;
+    stroke-width: 1.5;
+}
+
+[data-theme="dark"] .modal-icon {
+    color: #ff453a;
+}
+
+/* 텍스트 */
+.modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+    letter-spacing: -0.2px;
+}
+
+.modal-message {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+    line-height: 1.4;
+}
+
+.modal-sub-message {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0 0 24px;
+    line-height: 1.4;
+}
+
+/* 액션 버튼 */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-btn-cancel {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.modal-btn-cancel:hover {
+    background: var(--bg-tertiary);
+}
+
+.modal-btn-confirm {
+    background: #ff3b30;
+    color: #ffffff;
+}
+
+.modal-btn-confirm:hover {
+    background: #d62d20;
+}
+
+[data-theme="dark"] .modal-btn-confirm {
+    background: #ff453a;
+}
+
+[data-theme="dark"] .modal-btn-confirm:hover {
+    background: #d63529;
+}
+
+/* 모달 상태에 따른 전환 */
+.modal-overlay[style*="display: none"] {
+    pointer-events: none;
+}
+
+/* 애니메이션 */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

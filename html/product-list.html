@@ -1,0 +1,114 @@
+<!-- product-list.html - 상품 카드 목록 UI -->
+<div class="product-list-container">
+    <div class="product-list-header">
+        <h2 class="product-list-title">상품 목록</h2>
+        <span id="product-count" class="product-count">0개</span>
+    </div>
+
+    <div class="product-toolbar">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="product-search" class="search-input" placeholder="상품명, 거래처 검색...">
+        </div>
+        <button id="btn-refresh-products" class="btn btn-sm btn-outline" title="새로고침">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <polyline points="1 20 1 14 7 14" />
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+            </svg>
+        </button>
+        <div class="view-toggle">
+            <button id="btn-view-card" class="view-toggle-btn active" title="카드 보기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                </svg>
+            </button>
+            <button id="btn-view-list" class="view-toggle-btn" title="리스트 보기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <button id="btn-select-mode" class="btn btn-sm btn-outline" title="선택">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 11 12 14 22 4" />
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+            </svg>
+            선택
+        </button>
+    </div>
+
+    <!-- 시즌 필터 -->
+    <div class="tag-filter-group">
+        <span class="tag-filter-label">시즌</span>
+        <div class="season-filter">
+            <button class="season-filter-btn active" data-season="">전체</button>
+            <button class="season-filter-btn" data-season="봄">봄</button>
+            <button class="season-filter-btn" data-season="여름">여름</button>
+            <button class="season-filter-btn" data-season="가을">가을</button>
+            <button class="season-filter-btn" data-season="겨울">겨울</button>
+            <button class="season-filter-btn" data-season="사계절">사계절</button>
+        </div>
+    </div>
+
+    <!-- ACC 필터 -->
+    <div class="tag-filter-group">
+        <span class="tag-filter-label">ACC</span>
+        <div class="season-filter acc-filter">
+            <button class="acc-filter-btn active" data-acc="">전체</button>
+            <button class="acc-filter-btn" data-acc="모자">모자</button>
+            <button class="acc-filter-btn" data-acc="가방">가방</button>
+            <button class="acc-filter-btn" data-acc="신발">신발</button>
+            <button class="acc-filter-btn" data-acc="악세서리">악세서리</button>
+        </div>
+    </div>
+
+    <!-- 선택 모드 툴바 -->
+    <div id="selection-toolbar" class="selection-toolbar" style="display: none;">
+        <label class="selection-checkall">
+            <input type="checkbox" id="check-all" class="selection-checkbox">
+            <span class="checkmark"></span>
+        </label>
+        <span id="selection-count" class="selection-count">0개 선택</span>
+        <div class="selection-actions">
+            <button id="btn-delete-selected" class="btn btn-sm btn-danger" title="선택 삭제">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                삭제
+            </button>
+            <button id="btn-cancel-selection" class="btn btn-sm btn-outline" title="선택 취소">취소</button>
+        </div>
+    </div>
+
+    <div id="product-grid" class="product-grid">
+        <!-- 상품 카드가 동적으로 추가됨 -->
+        <div class="product-empty" id="product-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+            </svg>
+            <p>등록된 상품이 없습니다</p>
+            <small>크롬 확장프로그램을 통해 상품을 수집하고 등록해보세요</small>
+        </div>
+    </div>
+</div>

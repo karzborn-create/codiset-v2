@@ -1,0 +1,57 @@
+{
+    "name": "codiset",
+    "version": "1.0.0",
+    "description": "에이블리(Ably) 의류 쇼핑몰 신상 셀렉 데스크톱 앱",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "dev": "electron . --dev",
+        "build": "electron-builder",
+        "publish": "electron-builder --publish always",
+        "release:win": "electron-builder --publish always --win"
+    },
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "@electron/rebuild": "^3.7.2",
+        "electron": "^33.0.0",
+        "electron-builder": "^26.15.3"
+    },
+    "dependencies": {
+        "better-sqlite3": "^11.0.0",
+        "electron-updater": "^6.8.9"
+    },
+    "build": {
+        "appId": "com.codiset.app",
+        "productName": "Codiset",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "main.js",
+            "index.html",
+            "html/**/*",
+            "css/**/*",
+            "js/**/*",
+            "chrome-extension/**/*",
+            "node_modules/**/*",
+            "package.json"
+        ],
+        "win": {
+            "target": "nsis"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true
+        },
+        "mac": {
+            "target": "dmg"
+        },
+        "publish": {
+            "provider": "github",
+            "owner": "YOUR_GITHUB_USERNAME",
+            "repo": "codiset-v2"
+        }
+    }
+}
