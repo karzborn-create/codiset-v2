@@ -151,22 +151,55 @@ npm run publish
 
 ## 🔄 다음 업데이트 배포하는 법 (v1.0.0 → v1.0.1)
 
-1. 코드 수정 후, 버전 번호 올리기:
+> 🧹 **중요: `npm version patch`를 실행하기 전에 반드시 모든 변경사항을 커밋하세요!**
+>
+> `npm version patch`는 Git 태그를 자동 생성하므로 **워킹 디렉토리가 깨끗해야** 합니다.
+> 커밋되지 않은 파일이 있으면 `Git working directory not clean` 오류가 발생합니다.
+
+### 올바른 배포 순서
 
 ```bash
+# 1. 현재 변경사항 확인
+git status
+
+# 2. 모든 변경사항 추가
+git add .
+
+# 3. 커밋 (에러 발생 시 이 단계 필수!)
+git commit -m "변경사항 설명"
+
+# 4. 버전 번호 올리기 (1.0.0 → 1.0.1)
 npm version patch
-```
 
-2. 변경사항 GitHub에 올리기:
-
-```bash
+# 5. 코드 + 태그 함께 GitHub에 올리기
 git push origin main --tags
+
+# 6. 새 버전 릴리즈 생성
+npm run publish
+
+# 7. GitHub에서 Draft 릴리즈 → Publish 버튼 클릭
 ```
 
-3. 새 버전 릴리즈 생성:
+> 💡 **버전 올리는 명령어 종류**
+>
+> | 명령어 | 예시 (현재 1.0.0) | 사용 상황 |
+> |--------|:---:|------|
+> | `npm version patch` | → 1.0.**1** | 작은 버그 수정 |
+> | `npm version minor` | → 1.**1**.0 | 새로운 기능 추가 |
+> | `npm version major` | → **2**.0.0 | 큰 변화, 호환성 깨짐 |
+
+### ⚠️ 자주 하는 실수
 
 ```bash
-npm run publish
+# ❌ 잘못된 예: 아직 커밋 안 했는데 바로 patch 실행
+npm version patch
+# → 오류: Git working directory not clean.
+
+# ✅ 올바른 예: 먼저 커밋 후 patch 실행
+git add .
+git commit -m "변경사항"
+npm version patch
+# → 정상 작동!
 ```
 
 > 끝! 사용자들은 다음에 앱을 켤 때 자동으로 업데이트 알림을 받습니다.
@@ -177,10 +210,29 @@ npm run publish
 
 | 문제 | 해결 방법 |
 |------|-----------|
-| `GH_TOKEN` 없다고 뜸 | 3단계 다시 확인. 터미널을 껐다 켜보세요. |
-| `npm run publish` 실패 | `npm install` 한 번 더 실행 후 다시 시도 |
+| `GH_TOKEN` 없다고 뜸 | 3단계 다시 확인. PowerShell에서 설정 후 **터미널을 껐다 켜야** 적용됩니다. |
+| `npm run publish`에서 `ERR_REQUIRE_ESM` 오류 | 이미 해결됨 (`electron-builder@25.1.8` 사용 중). 만약 다시 발생하면 `npm install` 재실행 |
 | 업로드 권한 오류 | GitHub 토큰에 `repo` 권한이 체크되어 있는지 확인 |
-| 사용자한테 업데이트 알림 안 뜸 | `package.json`의 `version`이 실제로 올라갔는지 확인 |
+| `Git working directory not clean` | `git add .` → `git commit -m "메시지"` 먼저 실행 후 다시 시도 |
+| 릴리즈가 GitHub에 안 보임 | **Draft(초안)** 탭 확인 → **Publish release** 버튼 클릭 |
+| 사용자한테 업데이트 알림 안 뜸 | `package.json`의 `version`이 실제로 올라갔는지 확인 + Draft가 Publish 되었는지 확인 |
+| `setx` 했는데도 `GH_TOKEN` 인식 안 됨 | **VSCode를 완전히 종료 후 재시작**하면 확실히 적용됩니다. |
+
+### PowerShell에서 GH_TOKEN 설정 후 확인하기
+
+```powershell
+# 설정 후 새 터미널에서 확인
+$env:GH_TOKEN
+# 토큰이 출력되면 성공! 빈 값이면 설정이 안 된 것
+```
+
+### electron-builder 릴리즈가 Draft로 생성되는 이유
+
+`electron-builder`는 기본적으로 릴리즈를 **Draft(초안)** 상태로 만듭니다. 이는 실수로 잘못된 빌드가 바로 배포되는 것을 방지하기 위함입니다.
+
+GitHub 저장소 → **Releases** 탭 → Draft 항목에서 **Edit** → **Publish release**를 눌러야 정식 공개됩니다.
+
+> 💡 매번 Draft를 Publish하는 게 번거롭다면 `package.json`의 `build.publish`에 `"releaseType": "release"`를 추가하면 바로 공개 릴리즈로 생성됩니다.
 
 ---
 

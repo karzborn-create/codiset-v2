@@ -15,7 +15,7 @@
     "devDependencies": {
         "@electron/rebuild": "^3.7.2",
         "electron": "^33.0.0",
-        "electron-builder": "^26.15.3"
+        "electron-builder": "^25.1.8"
     },
     "dependencies": {
         "better-sqlite3": "^11.0.0",
@@ -24,6 +24,7 @@
     "build": {
         "appId": "com.codiset.app",
         "productName": "Codiset",
+        "icon": "icon/icon.ico",
         "directories": {
             "output": "dist"
         },
@@ -50,7 +51,7 @@
         },
         "publish": {
             "provider": "github",
-            "owner": "YOUR_GITHUB_USERNAME",
+            "owner": "karzborn-create",
             "repo": "codiset-v2"
         }
     }

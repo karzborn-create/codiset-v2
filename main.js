@@ -68,7 +68,8 @@ function createWindow() {
         height: 800,
         minWidth: 900,
         minHeight: 600,
-        title: 'Codiset - 에이블리 신상 셀렉',
+        title: 'Codiset',
+        icon: path.join(__dirname, 'icon', 'icon.ico'),
         backgroundColor: '#1c1c1e',
         show: false,
         webPreferences: {

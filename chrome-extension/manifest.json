@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Codiset 상품 수집",
+    "name": "Codiset 신상마켓 샘플 등록",
     "version": "1.0.0",
     "description": "거래처 사이트에서 상품 정보를 수집하여 Codiset에 등록합니다.",
     "permissions": [
@@ -30,8 +30,8 @@
         }
     ],
     "icons": {
-        "16": "icons/icon16.png",
-        "48": "icons/icon48.png",
-        "128": "icons/icon128.png"
+        "16": "icons/icon.png",
+        "48": "icons/icon.png",
+        "128": "icons/icon.png"
     }
 }
