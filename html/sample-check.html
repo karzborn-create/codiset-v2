@@ -1,0 +1,103 @@
+<!-- sample-check.html - 샘플 체크/반납 페이지 UI -->
+<div class="sample-check-container">
+    <!-- 헤더 영역 -->
+    <div class="sample-check-header">
+        <div class="sample-check-header-left">
+            <h2 class="sample-check-title">샘플 체크/반납</h2>
+            <span id="sample-check-count" class="sample-check-count">0개</span>
+        </div>
+        <button id="btn-sample-check-create" class="btn-sample-check-create">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            샘플 리스트 생성
+        </button>
+    </div>
+
+    <!-- 툴바: 검색 + 뷰 토글 -->
+    <div class="sample-check-toolbar">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="sample-check-search" class="search-input" placeholder="샘플 리스트 검색...">
+        </div>
+        <div class="view-toggle">
+            <button id="btn-sample-check-view-card" class="view-toggle-btn active" title="카드 보기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                </svg>
+            </button>
+            <button id="btn-sample-check-view-list" class="view-toggle-btn" title="리스트 보기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 샘플 체크 목록 영역 -->
+    <div id="sample-check-grid" class="sample-check-grid">
+        <div class="sample-check-empty" id="sample-check-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+            </svg>
+            <p>생성된 샘플 리스트가 없습니다</p>
+            <small>우측 상단의 '+ 샘플 리스트 생성' 버튼을 눌러 새로운 샘플 리스트를 만들어보세요</small>
+        </div>
+    </div>
+</div>
+
+<!-- 샘플 리스트 생성 모달 -->
+<div id="sample-check-modal" class="sample-check-modal-overlay" style="display: none;">
+    <div class="sample-check-modal-backdrop"></div>
+    <div class="sample-check-modal-container">
+        <div class="sample-check-modal-card">
+            <h3 id="sample-check-modal-title" class="sample-check-modal-title">새 샘플 리스트</h3>
+
+            <!-- 입고일 -->
+            <div class="sample-check-form-group">
+                <label class="sample-check-form-label" for="sample-check-date">입고일</label>
+                <input type="date" id="sample-check-date" class="sample-check-form-input">
+            </div>
+
+            <!-- 리스트명 -->
+            <div class="sample-check-form-group">
+                <label class="sample-check-form-label" for="sample-check-name">리스트명</label>
+                <input type="text" id="sample-check-name" class="sample-check-form-input" placeholder="리스트명을 입력하세요"
+                    maxlength="50">
+            </div>
+
+            <!-- 메모 -->
+            <div class="sample-check-form-group">
+                <label class="sample-check-form-label" for="sample-check-memo">메모</label>
+                <textarea id="sample-check-memo" class="sample-check-form-textarea" placeholder="메모를 남겨보세요" rows="3"
+                    maxlength="200"></textarea>
+            </div>
+
+            <!-- 액션 버튼 -->
+            <div class="sample-check-modal-actions">
+                <button id="btn-sample-check-cancel"
+                    class="sample-check-modal-btn sample-check-modal-btn-cancel">취소</button>
+                <button id="btn-sample-check-save"
+                    class="sample-check-modal-btn sample-check-modal-btn-save">생성</button>
+            </div>
+        </div>
+    </div>
+</div>

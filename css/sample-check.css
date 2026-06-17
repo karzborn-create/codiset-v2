@@ -1,0 +1,534 @@
+/* sample-check.css - 샘플 체크/반납 페이지 스타일 (iOS 다크모드 대응) */
+
+.sample-check-container {
+    padding: 24px 28px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 헤더 */
+.sample-check-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sample-check-header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.sample-check-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+}
+
+.sample-check-count {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+/* 툴바 */
+.sample-check-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* + 샘플 리스트 생성 버튼 */
+.btn-sample-check-create {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-sample-check-create:hover {
+    opacity: 0.85;
+}
+
+.btn-sample-check-create svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* 샘플 체크 그리드 */
+.sample-check-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    overflow-y: auto;
+    padding-right: 4px;
+    align-content: start;
+}
+
+/* 빈 상태 */
+.sample-check-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 20px;
+    color: var(--text-tertiary);
+    gap: 8px;
+    flex: 1;
+}
+
+.sample-check-empty svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+}
+
+.sample-check-empty p {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.sample-check-empty small {
+    font-size: 12px;
+}
+
+/* 리스트 뷰 */
+.sample-check-grid.view-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+/* ===== 생성 모달 ===== */
+.sample-check-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sampleCheckModalFadeIn 0.2s ease-out;
+}
+
+.sample-check-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.sample-check-modal-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+}
+
+.sample-check-modal-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px 24px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    animation: sampleCheckModalSlideUp 0.25s ease-out;
+}
+
+.sample-check-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 24px;
+    letter-spacing: -0.2px;
+    text-align: center;
+}
+
+/* 폼 그룹 */
+.sample-check-form-group {
+    margin-bottom: 20px;
+}
+
+.sample-check-form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    letter-spacing: -0.1px;
+}
+
+.sample-check-form-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.sample-check-form-input:focus {
+    border-color: var(--accent);
+}
+
+.sample-check-form-input::placeholder {
+    color: var(--text-quaternary);
+}
+
+.sample-check-form-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s;
+}
+
+.sample-check-form-textarea:focus {
+    border-color: var(--accent);
+}
+
+.sample-check-form-textarea::placeholder {
+    color: var(--text-quaternary);
+}
+
+/* 모달 액션 */
+.sample-check-modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.sample-check-modal-btn {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sample-check-modal-btn-cancel {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.sample-check-modal-btn-cancel:hover {
+    background: var(--bg-tertiary);
+}
+
+.sample-check-modal-btn-save {
+    background: var(--accent);
+    color: #fff;
+}
+
+.sample-check-modal-btn-save:hover {
+    opacity: 0.85;
+}
+
+/* 애니메이션 */
+@keyframes sampleCheckModalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes sampleCheckModalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ===== 샘플 체크 카드 ===== */
+.sample-check-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+}
+
+.sample-check-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.sample-check-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.sample-check-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.sample-check-card-memo {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.sample-check-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.sample-check-card-date {
+    font-size: 11px;
+    color: var(--text-quaternary);
+}
+
+.sample-check-card-status {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+
+.sample-check-card-status.pending {
+    background: rgba(255, 149, 0, 0.15);
+    color: #ff9500;
+}
+
+.sample-check-card-status.done {
+    background: rgba(52, 199, 89, 0.15);
+    color: #34c759;
+}
+
+/* ===== 리스트 뷰 행 ===== */
+.sample-check-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    transition: background 0.15s;
+}
+
+.sample-check-row:last-child {
+    border-bottom: none;
+}
+
+.sample-check-row:hover {
+    background: var(--bg-tertiary);
+}
+
+.sample-check-row-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sample-check-row-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sample-check-row-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sample-check-row-memo {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sample-check-row-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.sample-check-row-date {
+    font-size: 11px;
+    color: var(--text-quaternary);
+}
+
+.sample-check-row-status {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.sample-check-row-status.pending {
+    color: #ff9500;
+}
+
+.sample-check-row-status.done {
+    color: #34c759;
+}
+
+/* 카드 액션 버튼 영역 (수정 + 삭제) */
+.sample-check-card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 2;
+}
+
+.sample-check-card:hover .sample-check-card-actions {
+    opacity: 1;
+}
+
+/* 절대 위치 override → flex 내 정상 배치 */
+.sample-check-card-actions .btn-delete-codiset,
+.sample-check-card-actions .btn-edit-sample-list {
+    position: static;
+    opacity: 1;
+    top: auto;
+    right: auto;
+    z-index: auto;
+    background: rgba(0, 0, 0, 0.55);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.sample-check-card-actions .btn-delete-codiset:hover {
+    background: #ff3b30;
+}
+
+.sample-check-card-actions .btn-edit-sample-list:hover {
+    background: var(--accent);
+}
+
+.sample-check-card-actions .btn-delete-codiset svg,
+.sample-check-card-actions .btn-edit-sample-list svg {
+    width: 13px;
+    height: 13px;
+}
+
+/* 카드 거래처명 */
+.sample-check-card-stores {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 리스트 행 거래처명 */
+.sample-check-row-stores {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 리스트 행 수정 버튼 */
+.sample-check-row-meta .btn-edit-sample-list {
+    background: none;
+    border: none;
+    color: var(--text-quaternary);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+.sample-check-row-meta .btn-edit-sample-list:hover {
+    color: var(--accent);
+    background: var(--bg-tertiary);
+}
+
+.sample-check-row-meta .btn-edit-sample-list svg {
+    width: 15px;
+    height: 15px;
+}

@@ -1,0 +1,85 @@
+<!-- sample-check-edit.html - 샘플 체크/반납 편집 페이지 -->
+<div class="sample-check-edit-container">
+    <!-- 헤더 -->
+    <div class="sample-check-edit-header">
+        <button id="btn-sample-check-edit-back" class="btn-sample-check-edit-back" title="뒤로가기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+        </button>
+        <div class="sample-check-edit-header-info">
+            <h2 id="sample-check-edit-title" class="sample-check-edit-title">샘플 리스트</h2>
+            <span id="sample-check-edit-meta" class="sample-check-edit-meta"></span>
+        </div>
+        <button id="btn-add-sample-group" class="btn-add-sample-group">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            샘플 추가
+        </button>
+    </div>
+
+    <!-- 그룹 목록 영역 -->
+    <div id="sample-check-set-list" class="sample-check-set-list">
+        <div class="sample-check-edit-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+            </svg>
+            <p>등록된 샘플이 없습니다</p>
+            <small>'+ 샘플 추가' 버튼을 눌러 체크할 상품을 추가해보세요</small>
+        </div>
+    </div>
+</div>
+
+<!-- 상품 선택 모달 -->
+<div id="sample-check-product-modal" class="sample-check-product-modal-overlay" style="display: none;">
+    <div class="sample-check-product-modal-backdrop"></div>
+    <div class="sample-check-product-modal-container">
+        <div class="sample-check-product-modal-card">
+            <div class="sample-check-product-modal-header">
+                <h3 class="sample-check-product-modal-title">상품 선택</h3>
+                <button id="btn-sample-check-product-modal-close" class="sample-check-product-modal-close" title="닫기">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="sample-check-product-modal-toolbar">
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="sample-check-product-search" class="search-input" placeholder="상품명 검색...">
+                </div>
+            </div>
+            <div class="tag-filter-group" style="margin-bottom: 12px;">
+                <span class="tag-filter-label">시즌</span>
+                <div class="season-filter" id="sample-check-product-season-filter">
+                    <button class="season-filter-btn active" data-season="">전체</button>
+                    <button class="season-filter-btn" data-season="봄">봄</button>
+                    <button class="season-filter-btn" data-season="여름">여름</button>
+                    <button class="season-filter-btn" data-season="가을">가을</button>
+                    <button class="season-filter-btn" data-season="겨울">겨울</button>
+                    <button class="season-filter-btn" data-season="사계절">사계절</button>
+                </div>
+            </div>
+            <div id="sample-check-product-list" class="sample-check-product-list">
+                <div class="sample-check-product-empty">상품을 불러오는 중...</div>
+            </div>
+            <div class="sample-check-product-modal-actions">
+                <span id="sample-check-product-selected-count" class="sample-check-product-selected-count">0개 선택</span>
+                <button id="btn-sample-check-product-modal-add"
+                    class="sample-check-modal-btn sample-check-modal-btn-save">추가</button>
+            </div>
+        </div>
+    </div>
+</div>

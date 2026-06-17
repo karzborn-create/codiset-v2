@@ -111,6 +111,21 @@ function collectModalGid() {
     const codeEl = findInSibling(codeSibling, 'font-semibold text-[14px] leading-[20px]');
     data.productCode = getText(codeEl);
 
+    // 폴백: 상품명/상품코드가 빈 경우 min-w-[466px] 내부에서 재탐색
+    if (!data.productName || !data.productCode) {
+        const minWParent = findByClass('min-w-[466px]');
+        if (minWParent) {
+            if (!data.productName) {
+                const fbNameEl = findInEl(minWParent, 'font-normal text-[24px] leading-[32px]');
+                data.productName = getText(fbNameEl);
+            }
+            if (!data.productCode) {
+                const fbCodeEl = findInEl(minWParent, 'font-semibold text-[14px] leading-[20px]');
+                data.productCode = getText(fbCodeEl);
+            }
+        }
+    }
+
     // 5. 상품가격: font-semibold text-[28px] leading-[36px]
     const priceEl = findByClass('font-semibold text-[28px] leading-[36px]');
     data.productPrice = getText(priceEl);
@@ -169,6 +184,21 @@ function collectZzimList() {
     console.log('[zzimList] 상품코드 요소:', codeEl);
     console.log('[zzimList] 상품코드 텍스트:', getText(codeEl));
     data.productCode = getText(codeEl);
+
+    // 폴백: 상품명/상품코드가 빈 경우 min-w-[466px] 내부에서 재탐색
+    if (!data.productName || !data.productCode) {
+        const minWParent = findByClass('min-w-[466px]');
+        if (minWParent) {
+            if (!data.productName) {
+                const fbNameEl = findInEl(minWParent, 'font-normal text-[24px] leading-[32px]');
+                data.productName = getText(fbNameEl);
+            }
+            if (!data.productCode) {
+                const fbCodeEl = findInEl(minWParent, 'font-semibold text-[14px] leading-[20px]');
+                data.productCode = getText(fbCodeEl);
+            }
+        }
+    }
 
     // 5. 상품가격: font-semibold text-[28px] leading-[36px]
     const priceEl = findByClass('font-semibold text-[28px] leading-[36px]');

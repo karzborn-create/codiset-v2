@@ -72,6 +72,18 @@ function initDB(dbPath) {
     )
   `);
 
+    db.exec(`
+    CREATE TABLE IF NOT EXISTS sample_lists (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT DEFAULT '',
+      date TEXT DEFAULT '',
+      memo TEXT DEFAULT '',
+      groups TEXT DEFAULT '[]',
+      createdAt TEXT DEFAULT '',
+      updatedAt TEXT DEFAULT ''
+    )
+  `);
+
     // 기존 DB 마이그레이션: 누락된 컬럼 추가
     const existingCols = db.pragma('table_info(products)').map(c => c.name);
 
@@ -433,6 +445,85 @@ async function handleRequest(req, res) {
                 sendJSON(res, 200, { ok: true });
             } else {
                 sendJSON(res, 404, { error: 'Store not found' });
+            }
+            return;
+        }
+
+        // GET /sample-lists - 샘플 리스트 목록
+        if (req.method === 'GET' && path === '/sample-lists') {
+            const rows = db.prepare('SELECT * FROM sample_lists ORDER BY id DESC').all();
+            const parsed = rows.map(r => ({
+                ...r,
+                groups: JSON.parse(r.groups || '[]')
+            }));
+            sendJSON(res, 200, parsed);
+            return;
+        }
+
+        // POST /sample-list - 샘플 리스트 생성
+        if (req.method === 'POST' && path === '/sample-list') {
+            const data = await parseBody(req);
+            const now = new Date().toISOString();
+            const stmt = db.prepare(`
+                INSERT INTO sample_lists (name, date, memo, groups, createdAt, updatedAt)
+                VALUES (@name, @date, @memo, @groups, @createdAt, @updatedAt)
+            `);
+            const result = stmt.run({
+                name: data.name || '',
+                date: data.date || '',
+                memo: data.memo || '',
+                groups: JSON.stringify(data.groups || []),
+                createdAt: now,
+                updatedAt: now
+            });
+            console.log('[Bridge] 샘플 리스트 생성 완료, id:', result.lastInsertRowid);
+            sendJSON(res, 201, { ok: true, id: result.lastInsertRowid });
+            return;
+        }
+
+        // PUT /sample-list/:id - 샘플 리스트 수정
+        if (req.method === 'PUT' && path.startsWith('/sample-list/')) {
+            const id = parseInt(path.split('/').pop());
+            if (isNaN(id)) {
+                sendJSON(res, 400, { error: 'Invalid ID' });
+                return;
+            }
+            const data = await parseBody(req);
+            const now = new Date().toISOString();
+            const stmt = db.prepare(`
+                UPDATE sample_lists SET name=@name, date=@date, memo=@memo, groups=@groups, updatedAt=@updatedAt
+                WHERE id=@id
+            `);
+            const result = stmt.run({
+                id: id,
+                name: data.name || '',
+                date: data.date || '',
+                memo: data.memo || '',
+                groups: JSON.stringify(data.groups || []),
+                updatedAt: now
+            });
+            if (result.changes > 0) {
+                console.log('[Bridge] 샘플 리스트 수정 완료, id:', id);
+                sendJSON(res, 200, { ok: true });
+            } else {
+                sendJSON(res, 404, { error: 'Sample list not found' });
+            }
+            return;
+        }
+
+        // DELETE /sample-list/:id - 샘플 리스트 삭제
+        if (req.method === 'DELETE' && path.startsWith('/sample-list/')) {
+            const id = parseInt(path.split('/').pop());
+            if (isNaN(id)) {
+                sendJSON(res, 400, { error: 'Invalid ID' });
+                return;
+            }
+            const result = db.prepare('DELETE FROM sample_lists WHERE id = ?').run(id);
+            if (result.changes > 0) {
+                console.log('[Bridge] 샘플 리스트 삭제 완료, id:', id);
+                sendJSON(res, 200, { ok: true });
+            } else {
+                sendJSON(res, 404, { error: 'Sample list not found' });
             }
             return;
         }

@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="css/codiset-edit.css">
     <link rel="stylesheet" href="css/modal.css">
     <link rel="stylesheet" href="css/store-list.css">
+    <link rel="stylesheet" href="css/sample-check.css">
+    <link rel="stylesheet" href="css/sample-check-edit.css">
 </head>
 
 <body>
@@ -40,6 +42,8 @@
     <script src="js/codiset-edit.js"></script>
     <script src="js/modal.js"></script>
     <script src="js/store-list.js"></script>
+    <script src="js/sample-check.js"></script>
+    <script src="js/sample-check-edit.js"></script>
     <script>
         // sidebar.html fetch & inject
         (async function () {
@@ -73,6 +77,11 @@
                             await loadStoreList(main);
                         }
 
+                        // 샘플 체크/반납 메뉴 처리
+                        if (menu === 'sample-check') {
+                            await loadSampleCheck(main);
+                        }
+
                         console.log('[Codiset] 메뉴 변경:', menu);
                     });
 
@@ -92,6 +101,12 @@
                     if (window.Sidebar.getActiveMenu() === 'store-list') {
                         const main = document.getElementById('main-content');
                         await loadStoreList(main);
+                    }
+
+                    // 초기 메뉴가 sample-check이면 즉시 로드
+                    if (window.Sidebar.getActiveMenu() === 'sample-check') {
+                        const main = document.getElementById('main-content');
+                        await loadSampleCheck(main);
                     }
                 }
 
@@ -140,6 +155,21 @@
                     }
                 }
 
+                async function loadSampleCheck(main) {
+                    try {
+                        const res = await fetch('html/sample-check.html');
+                        const html = await res.text();
+                        main.innerHTML = html;
+                        const placeholder = document.querySelector('.main-placeholder');
+                        if (placeholder) placeholder.style.display = 'none';
+                        if (window.SampleCheck && typeof window.SampleCheck.init === 'function') {
+                            window.SampleCheck.init();
+                        }
+                    } catch (err) {
+                        console.error('[Codiset] 샘플체크 로드 실패:', err);
+                    }
+                }
+
                 async function loadCodisetEdit(main, codiset) {
                     try {
                         const res = await fetch('html/codiset-edit.html');
@@ -155,6 +185,21 @@
                     }
                 }
 
+                async function loadSampleCheckEdit(main, sampleList) {
+                    try {
+                        const res = await fetch('html/sample-check-edit.html');
+                        const html = await res.text();
+                        main.innerHTML = html;
+                        const placeholder = document.querySelector('.main-placeholder');
+                        if (placeholder) placeholder.style.display = 'none';
+                        if (window.SampleCheckEdit && typeof window.SampleCheckEdit.init === 'function') {
+                            window.SampleCheckEdit.init(sampleList);
+                        }
+                    } catch (err) {
+                        console.error('[Codiset] 샘플체크 편집 로드 실패:', err);
+                    }
+                }
+
                 // codiset.js → 편집 페이지 이동 글로벌 함수
                 window.CodisetEdit_navigate = function (codiset) {
                     const main = document.getElementById('main-content');
@@ -165,6 +210,18 @@
                 window.CodisetEdit.goBack = function () {
                     const main = document.getElementById('main-content');
                     loadCodiset(main);
+                };
+
+                // sample-check.js → 편집 페이지 이동 글로벌 함수
+                window.SampleCheckEdit_navigate = function (sampleList) {
+                    const main = document.getElementById('main-content');
+                    loadSampleCheckEdit(main, sampleList);
+                };
+
+                // sample-check-edit.js → 뒤로가기 글로벌 함수
+                window.SampleCheckEdit.goBack = function () {
+                    const main = document.getElementById('main-content');
+                    loadSampleCheck(main);
                 };
             } catch (err) {
                 console.error('[Codiset] 사이드바 로드 실패:', err);

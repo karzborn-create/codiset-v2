@@ -193,7 +193,7 @@
     transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     cursor: default;
     position: relative;
-    height: 560px;
+    height: 600px;
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow);
@@ -211,6 +211,7 @@
     object-fit: cover;
     background: var(--bg-tertiary);
     flex-shrink: 0;
+    height: 60%;
 }
 
 .product-card-image.no-image {
