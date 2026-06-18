@@ -206,7 +206,7 @@
     align-items: center;
     border-radius: 6px;
     transition: all 0.15s;
-    margin-left: auto;
+    margin-left: 15px;
 }
 
 .btn-delete-set:hover {
@@ -217,6 +217,35 @@
 .btn-delete-set svg {
     width: 16px;
     height: 16px;
+}
+
+/* 세트별 카톡 양식 버튼 */
+.btn-set-katalk {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #FEE500;
+    border: none;
+    border-radius: 6px;
+    color: #191919;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.btn-set-katalk:hover {
+    opacity: 0.8;
+}
+
+.btn-set-katalk svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
 }
 
 /* 세트 내 상품 그리드 (가로 최대 6개) */
@@ -263,7 +292,7 @@
     position: relative;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    /* border-radius: 10px; */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -865,4 +894,222 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+/* ===== 카톡 양식 버튼 ===== */
+.btn-katalk-format {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FEE500;
+    color: #191919;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+}
+
+.btn-katalk-format:hover {
+    opacity: 0.85;
+}
+
+.btn-katalk-format svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ===== 카톡 양식 모달 ===== */
+.katalk-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: codisetEditModalFadeIn 0.2s ease-out;
+}
+
+.katalk-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.katalk-modal-container {
+    position: relative;
+    z-index: 1;
+    width: 540px;
+    max-width: 94vw;
+    max-height: 90vh;
+}
+
+.katalk-modal-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    animation: codisetEditModalSlideUp 0.25s ease-out;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.katalk-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.katalk-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+    margin: 0;
+}
+
+.katalk-modal-close {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    transition: all 0.15s;
+}
+
+.katalk-modal-close:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.katalk-modal-close svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* 거래처 버튼 목록 */
+.katalk-store-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.katalk-store-btn {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.katalk-store-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.katalk-store-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+/* 코멘트 입력 */
+.katalk-comment-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.katalk-comment-input:focus {
+    border-color: var(--accent);
+}
+
+.katalk-comment-input::placeholder {
+    color: var(--text-quaternary);
+}
+
+/* 카톡 양식 textarea */
+.katalk-textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.katalk-textarea:focus {
+    border-color: var(--accent);
+}
+
+/* 모달 액션 */
+.katalk-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.katalk-selected-store {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.katalk-modal-btn {
+    height: 38px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    padding: 0 20px;
+}
+
+.katalk-modal-btn-accent {
+    background: var(--accent);
+    color: #fff;
+}
+
+.katalk-modal-btn-accent:hover {
+    opacity: 0.85;
 }

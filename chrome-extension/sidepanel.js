@@ -60,17 +60,35 @@ function renderPreview(data) {
 
     const rows = Object.entries(data)
         .filter(([key]) => key !== 'image')
-        .map(([key, val]) => `
+        .map(([key, val]) => {
+            if (key === 'productName') {
+                return `
+      <div class="preview-row preview-row-editable">
+        <span class="preview-label">${FIELD_LABELS[key] || key}</span>
+        <input type="text" class="preview-input" id="input-productName" value="${escapeHtml(val || '')}" placeholder="상품명 입력">
+      </div>`;
+            }
+            return `
       <div class="preview-row">
         <span class="preview-label">${FIELD_LABELS[key] || key}</span>
         <span class="preview-value">${val || '-'}</span>
-      </div>`).join('');
+      </div>`;
+        }).join('');
 
     els.previewContainer.innerHTML = `
     <div class="preview-data">
       ${data.image ? `<img class="preview-image" src="${data.image}" alt="상품 이미지" onerror="this.style.display='none'">` : ''}
       ${rows}
     </div>`;
+}
+
+/**
+ * HTML 이스케이프
+ */
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
 }
 
 /**
@@ -160,6 +178,12 @@ async function register() {
     if (selectedSeasons.length === 0 && selectedAccs.length === 0) {
         showStatus('시즌 또는 ACC를 선택해주세요', 'error');
         return;
+    }
+
+    // 수정된 상품명 읽기
+    const nameInput = document.getElementById('input-productName');
+    if (nameInput) {
+        collectedData.productName = nameInput.value.trim();
     }
 
     showStatus('등록 중...', 'info');

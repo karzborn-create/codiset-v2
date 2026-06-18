@@ -18,6 +18,9 @@
         selColor: '',              // 현재 선택된 색상 (단일)
         selSizes: []               // 현재 선택된 사이즈들 (다중)
     };
+    let katalkComment = '';      // 카톡 양식 사용자 코멘트
+    let katalkActiveStore = '';  // 현재 선택된 거래처
+    let katalkSetId = null;      // 특정 세트 필터 (null=전체세트)
     let els = {};
 
     // ===== 헬퍼 =====
@@ -118,9 +121,25 @@
     // ===== 세트 삭제 =====
 
     function deleteSet(setId) {
-        sets = sets.filter(s => s.id !== setId);
-        saveToDB();
-        render();
+        const set = sets.find(s => s.id === setId);
+        const label = set ? set.label : '이 세트';
+        if (window.Modal) {
+            window.Modal.open({
+                message: `"${label}" 세트를 삭제하시겠습니까?`,
+                subMessage: '세트 내 상품이 모두 제거됩니다.',
+                onConfirm: () => {
+                    sets = sets.filter(s => s.id !== setId);
+                    saveToDB();
+                    render();
+                }
+            });
+        } else {
+            // fallback
+            if (!confirm(`"${label}"을(를) 정말 삭제하시겠습니까?`)) return;
+            sets = sets.filter(s => s.id !== setId);
+            saveToDB();
+            render();
+        }
     }
 
     // ===== 상품 선택 모달 =====
@@ -203,6 +222,7 @@
         if (set && newLabel.trim()) {
             set.label = newLabel.trim();
             saveToDB();
+            render();
         }
     }
 
@@ -375,6 +395,12 @@
                     </button>
                     <span class="codiset-set-block-label-text" data-label-text="${set.id}">${escapeHTML(set.label)}</span>
                     <span class="codiset-set-block-label-count">(${set.items.length}개)</span>
+                    <button class="btn-set-katalk" data-set-katalk="${set.id}" title="세트 카톡 양식 생성">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        ${escapeHTML(set.label)} 카톡 양식
+                    </button>
                     <button class="btn-delete-set" data-delete-set="${set.id}" title="세트 삭제">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                             <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -440,6 +466,15 @@
         els.setList.querySelectorAll('.btn-add-sample').forEach(btn => {
             btn.addEventListener('click', () => {
                 openProductModal(parseInt(btn.dataset.addSample));
+            });
+        });
+
+        // 세트별 카톡 양식 버튼
+        els.setList.querySelectorAll('.btn-set-katalk').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                katalkSetId = parseInt(btn.dataset.setKatalk);
+                openKatalkModal();
             });
         });
 
@@ -654,6 +689,118 @@
         render();
     }
 
+    // ===== 카톡 양식 모달 =====
+
+    function openKatalkModal() {
+        if (!currentCodiset || !currentCodiset.id) return;
+        // DB에서 저장된 코멘트 불러오기
+        fetch('http://localhost:19877/katalk-comment')
+            .then(res => res.json())
+            .then(data => { katalkComment = data.comment || ''; })
+            .catch(() => { katalkComment = ''; })
+            .finally(() => {
+                katalkActiveStore = '';
+                // 모달 타이틀 설정
+                if (els.katalkModalTitle) {
+                    if (katalkSetId) {
+                        const set = sets.find(s => s.id === katalkSetId);
+                        els.katalkModalTitle.textContent = (set ? set.label : '세트') + ' 카톡 양식';
+                    } else {
+                        els.katalkModalTitle.textContent = '카톡 양식';
+                    }
+                }
+                if (els.katalkModal) els.katalkModal.style.display = '';
+                if (els.katalkCommentInput) els.katalkCommentInput.value = katalkComment;
+                if (els.katalkTextarea) els.katalkTextarea.value = '';
+                renderKatalkStoreButtons();
+            });
+    }
+
+    function closeKatalkModal() {
+        if (els.katalkModal) els.katalkModal.style.display = 'none';
+        katalkActiveStore = '';
+        katalkSetId = null;
+    }
+
+    function saveKatalkComment() {
+        const comment = els.katalkCommentInput ? els.katalkCommentInput.value : '';
+        katalkComment = comment;
+        fetch('http://localhost:19877/katalk-comment', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ comment })
+        }).catch(() => { });
+    }
+
+    function renderKatalkStoreButtons() {
+        if (!els.katalkStoreBtns) return;
+        // 특정 세트 또는 전체 세트에서 storeName 수집
+        const targetSets = katalkSetId ? sets.filter(s => s.id === katalkSetId) : sets;
+        const storeSet = new Set();
+        targetSets.forEach(s => {
+            (s.items || []).forEach(item => {
+                if (item.storeName && item.storeName.trim()) {
+                    storeSet.add(item.storeName.trim());
+                }
+            });
+        });
+        const stores = Array.from(storeSet).sort();
+
+        if (stores.length === 0) {
+            els.katalkStoreBtns.innerHTML = '<span style="font-size:12px;color:var(--text-tertiary)">추가된 거래처가 없습니다</span>';
+            return;
+        }
+
+        els.katalkStoreBtns.innerHTML = stores.map(store =>
+            `<button class="katalk-store-btn${store === katalkActiveStore ? ' active' : ''}" data-store="${escapeHTML(store)}">${escapeHTML(store)}</button>`
+        ).join('');
+
+        els.katalkStoreBtns.querySelectorAll('.katalk-store-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                katalkActiveStore = btn.dataset.store;
+                renderKatalkStoreButtons();
+                updateKatalkText();
+            });
+        });
+    }
+
+    function updateKatalkText() {
+        if (!els.katalkCommentInput || !els.katalkTextarea) return;
+
+        // 코멘트 저장
+        saveKatalkComment();
+
+        const comment = els.katalkCommentInput.value;
+        const lines = [];
+
+        // 사용자 코멘트 (앞뒤 빈 줄 보존, 내용이 있을 때만 출력)
+        if (comment.trim()) lines.push(comment);
+
+        // 해당 거래처 상품 목록 (상품명만 줄바꿈, 세트 필터)
+        if (katalkActiveStore) {
+            const targetSets = katalkSetId ? sets.filter(s => s.id === katalkSetId) : sets;
+            const items = [];
+            targetSets.forEach(s => {
+                (s.items || []).forEach(item => {
+                    if (item.storeName && item.storeName.trim() === katalkActiveStore) {
+                        items.push(item);
+                    }
+                });
+            });
+
+            items.forEach(item => {
+                lines.push(item.productName || '이름 없음');
+            });
+        }
+
+        els.katalkTextarea.value = lines.join('\n');
+
+        // 선택된 거래처 표시
+        if (els.katalkSelectedStore) {
+            els.katalkSelectedStore.textContent = katalkActiveStore || '';
+        }
+    }
+
     // ===== 이벤트 바인딩 =====
 
     function bindEvents() {
@@ -698,6 +845,10 @@
 
         // ESC
         document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && els.katalkModal && els.katalkModal.style.display !== 'none') {
+                closeKatalkModal();
+                return;
+            }
             if (e.key === 'Escape' && els.productModal && els.productModal.style.display !== 'none') {
                 closeProductModal();
             }
@@ -725,6 +876,36 @@
                 closeOptionPopover();
             }
         });
+
+        // 카톡 양식 모달
+        if (els.btnKatalkFormat) {
+            els.btnKatalkFormat.addEventListener('click', openKatalkModal);
+        }
+        if (els.btnKatalkModalClose) {
+            els.btnKatalkModalClose.addEventListener('click', closeKatalkModal);
+        }
+        if (els.katalkModalBackdrop) {
+            els.katalkModalBackdrop.addEventListener('click', closeKatalkModal);
+        }
+        if (els.katalkCommentInput) {
+            els.katalkCommentInput.addEventListener('input', () => {
+                saveKatalkComment();
+                updateKatalkText();
+            });
+        }
+        if (els.btnKatalkCopy) {
+            els.btnKatalkCopy.addEventListener('click', () => {
+                const text = els.katalkTextarea ? els.katalkTextarea.value : '';
+                if (text && navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        const btn = els.btnKatalkCopy;
+                        const orig = btn.textContent;
+                        btn.textContent = '복사됨!';
+                        setTimeout(() => { btn.textContent = orig; }, 1500);
+                    }).catch(() => { });
+                }
+            });
+        }
     }
 
     // ===== 초기화 =====
@@ -753,7 +934,17 @@
             optionSelectedList: document.getElementById('codiset-option-selected-list'),
             optionTotal: document.getElementById('codiset-option-total'),
             btnOptionPopoverClose: document.getElementById('btn-option-popover-close'),
-            btnOptionAdd: document.getElementById('btn-option-add')
+            btnOptionAdd: document.getElementById('btn-option-add'),
+            // 카톡 양식 모달
+            katalkModal: document.getElementById('katalk-modal'),
+            katalkModalBackdrop: document.querySelector('#katalk-modal .katalk-modal-backdrop'),
+            katalkStoreBtns: document.getElementById('katalk-store-buttons'),
+            katalkCommentInput: document.getElementById('katalk-comment-input'),
+            katalkTextarea: document.getElementById('katalk-textarea'),
+            katalkSelectedStore: document.getElementById('katalk-selected-store'),
+            btnKatalkFormat: document.getElementById('btn-katalk-format'),
+            btnKatalkModalClose: document.getElementById('btn-katalk-modal-close'),
+            btnKatalkCopy: document.getElementById('btn-katalk-copy')
         };
 
         initCodiset(codiset);

@@ -125,7 +125,15 @@
         </button>
         ${imageHTML}
         <div class="product-card-body">
-          <div class="product-card-name">${escapeHTML(p.productName || p.storeName || '이름 없음')}</div>
+          <div class="product-card-name-row">
+            <div class="product-card-name">${escapeHTML(p.productName || p.storeName || '이름 없음')}</div>
+            <button class="btn-edit-product" data-edit="${p.id}" data-edit-field="productName" title="상품명 수정">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+          </div>
           <div class="product-card-supplier">${escapeHTML(p.storeName || '')}${p.storeAddress ? ' · ' + escapeHTML(p.storeAddress) : ''}</div>
           <div class="product-card-meta">
             <span>코드: ${escapeHTML(p.productCode || '-')}</span>
@@ -182,7 +190,15 @@
         ${imageHTML}
         <div class="product-row-body">
           ${seasonBadges ? `<div class="product-row-season">${seasonBadges}</div>` : ''}
-          <div class="product-row-name">${escapeHTML(p.productName || p.storeName || '이름 없음')}</div>
+          <div class="product-row-name-row">
+            <div class="product-row-name">${escapeHTML(p.productName || p.storeName || '이름 없음')}</div>
+            <button class="btn-edit-product" data-edit="${p.id}" data-edit-field="productName" title="상품명 수정">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+          </div>
           <div class="product-row-info">
             <span class="product-row-supplier">${escapeHTML(p.storeName || '')}</span>
             ${p.productCode ? `<span>코드: ${escapeHTML(p.productCode)}</span>` : ''}
@@ -342,6 +358,19 @@
             });
         });
 
+        // 수정 버튼 이벤트
+        els.grid.querySelectorAll('.btn-edit-product').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (isSelectionMode) return;
+                const id = parseInt(btn.dataset.edit);
+                const field = btn.dataset.editField;
+                const card = btn.closest('.product-card, .product-row');
+                const nameEl = card.querySelector('.product-card-name, .product-row-name');
+                if (nameEl) startInlineEdit(nameEl, id, field);
+            });
+        });
+
         // 삭제 버튼 이벤트 - 확인 모달 후 삭제
         els.grid.querySelectorAll('.btn-delete-product').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -486,6 +515,74 @@
             }
         } catch (e) {
             console.error('[Codiset] 상품 삭제 실패:', e);
+        }
+    }
+
+    /**
+     * 인라인 편집 시작 - div를 input으로 전환
+     */
+    function startInlineEdit(el, id, field) {
+        const currentValue = el.textContent.trim();
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'inline-edit-input';
+        input.value = currentValue;
+
+        el.replaceWith(input);
+        input.focus();
+        input.select();
+
+        const save = () => {
+            const newValue = input.value.trim();
+
+            if (newValue && newValue !== currentValue) {
+                // 로컬 데이터 즉시 갱신
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    product[field] = newValue;
+                }
+                // 서버 저장은 백그라운드로
+                saveInlineEdit(id, field, newValue);
+            }
+
+            // render()로 전체 복원 (수정 버튼 포함)
+            render();
+        };
+
+        input.addEventListener('blur', save);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                input.blur();
+            }
+            if (e.key === 'Escape') {
+                input.value = currentValue;
+                input.removeEventListener('blur', save);
+                render();
+            }
+        });
+    }
+
+    /**
+     * 인라인 편집 저장 - 서버에 PUT 요청
+     */
+    async function saveInlineEdit(id, field, value) {
+        try {
+            const res = await fetch(`http://localhost:19877/product/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ [field]: value })
+            });
+            if (res.ok) {
+                // 로컬 데이터 갱신
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    product[field] = value;
+                }
+                console.log(`[Codiset] 상품 ${id} ${field} 업데이트 완료`);
+            }
+        } catch (e) {
+            console.error('[Codiset] 상품 업데이트 실패:', e);
         }
     }
 

@@ -12,6 +12,13 @@
             <h2 id="codiset-edit-title" class="codiset-edit-title">코디세트</h2>
             <span id="codiset-edit-meta" class="codiset-edit-meta"></span>
         </div>
+        <button id="btn-katalk-format" class="btn-katalk-format" title="카톡 양식">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            카톡 양식
+        </button>
         <button id="btn-add-set" class="btn-add-set">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round">
@@ -119,6 +126,34 @@
             <div class="codiset-product-modal-actions">
                 <span id="codiset-product-selected-count" class="codiset-product-selected-count">0개 선택</span>
                 <button id="btn-product-modal-add" class="codiset-modal-btn codiset-modal-btn-save">추가</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 카톡 양식 모달 -->
+<div id="katalk-modal" class="katalk-modal-overlay" style="display: none;">
+    <div class="katalk-modal-backdrop"></div>
+    <div class="katalk-modal-container">
+        <div class="katalk-modal-card">
+            <div class="katalk-modal-header">
+                <h3 class="katalk-modal-title">카톡 양식</h3>
+                <button id="btn-katalk-modal-close" class="katalk-modal-close" title="닫기">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div id="katalk-store-buttons" class="katalk-store-buttons"></div>
+            <textarea id="katalk-comment-input" class="katalk-comment-input" placeholder="사용자 지정 코멘트를 입력하세요..."
+                rows="2"></textarea>
+            <textarea id="katalk-textarea" class="katalk-textarea" rows="10" spellcheck="false"
+                placeholder="거래처 버튼을 클릭하면 여기에 양식이 표시됩니다."></textarea>
+            <div class="katalk-modal-actions">
+                <span id="katalk-selected-store" class="katalk-selected-store"></span>
+                <button id="btn-katalk-copy" class="katalk-modal-btn katalk-modal-btn-accent">복사</button>
             </div>
         </div>
     </div>

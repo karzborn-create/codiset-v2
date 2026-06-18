@@ -84,6 +84,13 @@ function initDB(dbPath) {
     )
   `);
 
+    db.exec(`
+    CREATE TABLE IF NOT EXISTS katalk_comments (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      comment TEXT DEFAULT ''
+    )
+  `);
+
     // 기존 DB 마이그레이션: 누락된 컬럼 추가
     const existingCols = db.pragma('table_info(products)').map(c => c.name);
 
@@ -270,6 +277,40 @@ async function handleRequest(req, res) {
                 console.log('[Bridge] 상품 삭제 완료, id:', id);
                 sendJSON(res, 200, { ok: true });
                 notifyRenderer();
+            } else {
+                sendJSON(res, 404, { error: 'Product not found' });
+            }
+            return;
+        }
+
+        // PUT /product/:id - 상품 수정
+        if (req.method === 'PUT' && path.startsWith('/product/')) {
+            const id = parseInt(path.split('/').pop());
+            if (isNaN(id)) {
+                sendJSON(res, 400, { error: 'Invalid ID' });
+                return;
+            }
+
+            const data = await parseBody(req);
+            const fields = [];
+            const params = { id };
+
+            if (data.productName !== undefined) {
+                fields.push('productName = @productName');
+                params.productName = data.productName;
+            }
+
+            if (fields.length === 0) {
+                sendJSON(res, 400, { error: 'No fields to update' });
+                return;
+            }
+
+            const sql = `UPDATE products SET ${fields.join(', ')} WHERE id = @id`;
+            const result = db.prepare(sql).run(params);
+
+            if (result.changes > 0) {
+                console.log('[Bridge] 상품 수정 완료, id:', id, data);
+                sendJSON(res, 200, { ok: true });
             } else {
                 sendJSON(res, 404, { error: 'Product not found' });
             }
@@ -525,6 +566,25 @@ async function handleRequest(req, res) {
             } else {
                 sendJSON(res, 404, { error: 'Sample list not found' });
             }
+            return;
+        }
+
+        // GET /katalk-comment - 카톡 코멘트 조회
+        if (req.method === 'GET' && path === '/katalk-comment') {
+            const row = db.prepare('SELECT comment FROM katalk_comments WHERE id = 1').get();
+            sendJSON(res, 200, { comment: row ? row.comment : '' });
+            return;
+        }
+
+        // PUT /katalk-comment - 카톡 코멘트 저장
+        if (req.method === 'PUT' && path === '/katalk-comment') {
+            const data = await parseBody(req);
+            db.prepare(`
+                INSERT INTO katalk_comments (id, comment) VALUES (1, @comment)
+                ON CONFLICT(id) DO UPDATE SET comment = @comment
+            `).run({ comment: data.comment || '' });
+            console.log('[Bridge] 카톡 코멘트 저장 완료');
+            sendJSON(res, 200, { ok: true });
             return;
         }
 
